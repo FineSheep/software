@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Sign in</title>
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<link rel="stylesheet" type="text/css" href="css/iconfont.css" />
+		<script src="bootstrap/jQuery-1.12.4.js"></script>
+		<script src="javascript/cookieTool.js"></script>
+	</head>
+	<style type="text/css">
+		span {
+			font-size: 1px;
+		}
+	</style>
+	<body>
+		<form id="myForm">
+			<div id="login-box">
+				<h1>Login</h1>
+				<div class="input-box">
+					<i class="iconfont">&#xe609;</i>
+
+					<input type="text" placeholder="UserName" name="adminName" id="adminName" />
+					<br>
+					<span id="sp1"></span>
+				</div>
+				<div class="input-box">
+					<i class="iconfont">&#xe605;</i>
+					<input type="password" placeholder="UserPassword" id="UserPassword" name="adminPassword" />
+					<br>
+					<span id="sp2"></span>
+				</div>
+				<button type="button" onclick="login()">Sign in</button>
+				<br>
+				<button type="button" onclick="re()">Register</button>
+				<br>
+
+			</div>
+
+
+		</form>
+
+	</body>
+	<script>
+		function re() {
+			location.href = "register.html";
+		}
+
+		function login() {
+
+			$.ajax({
+				url: 'http://localhost:8080/admin/login',
+				type: 'get',
+				data: $("#myForm").serialize(),
+				success: function(msg) {
+					alert(msg);
+					if ('ok' == msg) {
+						console.log($("#adminName").val());
+						setCookie("loginName", $("#adminName").val(), 1);
+						location.href = "practice.html";
+
+					} else {
+
+						location.History();
+					}
+				}
+			})
+		}
+	</script>
+</html>

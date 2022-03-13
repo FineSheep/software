@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="bootstrap/jQuery-1.12.4.js"></script>
+		<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+		<script src="javascript/cookieTool.js"></script>
+	</head>
+
+	<style>
+		.mytable {
+			margin: 0 50px;
+
+		}
+
+		td {
+
+			width: 300px;
+			text-align: center;
+		}
+
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		#box {
+			width: 400px;
+			height: 20px;
+			margin: 40px auto;
+		}
+
+		#box div {
+			width: 200px;
+			height: 40px;
+			border: 1px #F3C solid;
+			text-align: center;
+			float: left;
+			font-size: 26px;
+		}
+
+		#box button {
+			float: left;
+			margin-top: 10px;
+			margin-left: 20px;
+		}
+
+		#box span {
+			float: left;
+			width: 200px;
+			height: 100px;
+			overflow-y: auto;
+			display: block;
+			border: 1px #C9C solid;
+			margin-top: 10px;
+		}
+
+		.tt {
+			margin: 20px 500px;
+		}
+	</style>
+	<body>
+		<div id="box">
+			<div id="timer"></div>
+			<button onClick="btTime()" class="btn btn-primary">开始服务</button>
+			<!--<button onClick="count()">count</button>-->
+
+		</div>
+
+
+		<div class="mytable">
+			<table border="1px" id="me">
+				<tr>
+					<td>计算</td>
+					<td>结果</td>
+					<td>正确答案</td>
+					<td>评判结果</td>
+				</tr>
+			</table>
+		</div>
+
+		<div class="tt">
+			<button onClick="fresh()" class="btn btn-primary" id="again" style="display: none;">开始下一次</button>
+		</div>
+		</div>
+
+	</body>
+	<script src="javascript/jQuery-1.12.4.js"></script>
+
+	<script type="text/javascript">
+		var timer = document.getElementById("timer");
+		var butt = document.getElementsByTagName("button");
+
+		var hour = '00'; //时  
+		var minus = '00'; //分  
+		var seconds = '00'; //秒  
+		var grade = 0;
+
+		timer.innerHTML = hour + ":" + minus + ":" + seconds;
+		var x = 0,
+			y = 0,
+			f = 0,
+			a = 0,
+			b = 0,
+			t1, t2;
+		var flag = 0;
+
+		function btTime() {
+			/*ajax:*/
+
+
+			switch (flag) {
+				case 0:
+					flag = 1;
+					w = 1;
+					t1 = setInterval(beginS, 1000);
+					butt[0].innerHTML = '结束服务';
+					getAll();
+					break;
+				case 1:
+					flag = 2;
+					clearInterval(t1);
+					butt[0].innerHTML = '服务已结束';
+					judge();
+					break;
+
+			}
+		}
+
+		function beginS() { //计算秒  
+			x++;
+			if (x < 10) {
+				seconds = '0' + x;
+			} else if (x >= 10 && x <= 59) {
+				seconds = x;
+			} else if (x > 59) {
+				seconds = '00';
+				x = 0;
+				a++;
+			}
+
+			if (a < 10) {
+				minus = '0' + a;
+			} else if (a >= 10 && a <= 59) {
+				minus = a;
+			} else if (a > 59) {
+				minus = '00';
+				a = 0;
+				b++;
+			}
+
+			if (b < 10) {
+				hour = '0' + b;
+			} else if (b >= 10 && b <= 59) {
+				hour = b;
+			}
+
+			timer.innerHTML = hour + ":" + minus + ":" + seconds;
+
+		}
+
+		function fresh() {
+			judge();
+			location.reload();
+		}
+
+		function getAll() {
+			$.ajax({
+				url: 'http://localhost:8080/title/getAll',
+				type: 'get',
+				success: function(list) {
+					var id1 = "a0";
+					var id2 = "b0";
+					var id3 = "c0";
+					for (var i = 0; i < list.length; i++) {
+
+						var s = JSON.stringify(list[i]);
+						var s1 = s.split(":");
+						var title = s1[0].substr(2, s1[0].length - 3);
+						var result = s1[1].substr(0, s1[1].length - 1);
+						$("#me").append(`<tr><td>` + title + `</td>
+						<td><input id=` + id2 +`  oninput="value=value.replace(` + /[^\d]/g + `,'')"   ></td>
+						<td><span id=` +id1 +` style="display:none">` + result + `</span></td>
+						<td><span id=` + id3 +`></span></td></tr>`);
+						/* console.log(title+'='+result); */
+						id1 += 1;
+						id2 += 1;
+						id3 += 1;
+					}
+				}
+			})
+		}
+
+		function judge() {
+			var id1 = "a0";
+			var id2 = "b0";
+			var id3 = "c0";
+			for (var i = 0; i < 20; i++) {
+				result = $("#" + id1).html();
+				myResult = $("#" + id2).val();
+				$("#" + id1).css('display','block');
+				if (result == myResult) {
+					 
+					$("#" + id3).html(`<a href="#" class="glyphicon glyphicon-ok"></a>`);
+					grade += 5;
+				} else {
+					$("#" + id3).html(`<a href="#" class="glyphicon glyphicon-remove"></a>`);
+				}
+				id1 += 1;
+				id2 += 1;
+				id3 += 1;
+			}
+			send();
+		}
+
+		function send() {
+			console.log(hour + ":" + minus + ":" + seconds);
+			time = hour * 60 + minus * 60 + seconds;
+			console.log("总时间：" + time);
+			console.log("总分数：" + grade);
+			alert("总时间：" + time + "s" + "      总分数：" + grade + "       请继续努力！");
+
+			$.ajax({
+				url: 'http://localhost:8080/grade/storeGrade',
+				type: 'get',
+				data: {
+					name: getCookie("loginName"),
+					myGrade: grade
+				},
+				success: function(msg) {
+					console.log(msg);
+					$('#again').css('display','block');
+				}
+			})
+		}
+	</script>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>柱状图</title>
+		<!-- 引入 echarts.js -->
+		<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+		<!-- 引入 vue -->
+		<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+		<!-- 引入 jquery -->
+		<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="javascript/cookieTool.js"></script>
+	</head>
+	<body>
+		<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+		<div id="main" style="width: 600px;height:400px;"></div>
+		</script>
+		</head>
+		<body>
+			<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+			<div id="main" style="width: 600px;height:400px;"></div>
+			
+			 <script type="text/javascript">
+			           var vm=new Vue({
+			           		el:"#main",
+			           		data:{
+			           			name:["中国","美国"],
+			           			type:["2","1"],
+								url:"http://localhost:8080/grade/getAllGrade?name="+getCookie("loginName")
+			           		},
+			           		methods:{	//自定义方法
+			           		getBarChart:function(){
+			           			$.get(this.url,{},function(data){
+									console.log(data);
+			           				
+			           				//vm.name和vm.type数组清空,保证数据准确性
+			           				vm.name=[];
+			           				vm.type=[];
+			           				for(var i=0;i<data.length;i++){	//for循环遍历出来
+			           				//数据库的值分别赋给vm.name和vm.type数组
+			           					vm.name.push('第'+(i+1)+'次');	
+			           					vm.type.push(data[i].grade);
+			           					
+			           				}
+			           				 // 基于准备好的dom，初始化echarts实例
+			             var myChart = echarts.init(document.getElementById('main'));
+			              // 指定图表的配置项和数据
+			             myChart.setOption({
+			                   title: {
+			                        text: getCookie("loginName")+"的分数情况"
+			                   },
+			                   tooltip: {},
+			                   legend: {
+			                        data: ['jack']
+			                   },
+			                   xAxis: {
+			                        data:vm.name
+			                   },
+			                   yAxis: {
+							   },
+			                   series: [{
+			                        name: '成绩',
+			                        type: 'bar',
+			                        data:vm.type 
+			                   }]
+			              });
+			           			})
+			           		},
+			           		
+			           },
+			         mounted(){
+			      		this.getBarChart();
+			      		this.tiemr=setInterval(this.getBarChart,10000);
+			      	}
+			           		
+			           });
+			           
+			             
+			           
+			             
+			          </script>
+
+
+		</body>
+</html>
