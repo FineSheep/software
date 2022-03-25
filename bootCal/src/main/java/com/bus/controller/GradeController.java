@@ -17,7 +17,7 @@ import java.util.List;
 @CrossOrigin
 public class GradeController {
     @Autowired
-    GradeService g;
+    private  GradeService g;
 
     @RequestMapping("/storeGrade")
     public String storeGrade(String name, String myGrade) {

@@ -14,10 +14,10 @@ import java.util.List;
 public class GradeServiceImp implements GradeService{
 
     @Autowired
-    AdminService as;
+    private  AdminService as;
 
     @Autowired
-    GradeMapper g;
+    private   GradeMapper g;
 
     @Override
     public String insertGrade(String name,String myGrade) {

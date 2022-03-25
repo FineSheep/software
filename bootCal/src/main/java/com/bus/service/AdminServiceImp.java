@@ -10,7 +10,7 @@ import tk.mybatis.mapper.entity.Example;
 @Service
 public class AdminServiceImp implements AdminService{
     @Autowired
-    AdminMapper adminMapper;
+    private  AdminMapper adminMapper;
     @Override
     public String login(String name) {
         Example example = new Example(Admin.class);

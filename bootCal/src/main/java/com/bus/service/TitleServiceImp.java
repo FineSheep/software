@@ -12,7 +12,7 @@ import java.util.*;
 public class TitleServiceImp implements TitleService{
 
     @Autowired(required = false)
-    TitleMapper titleMapper;
+    private  TitleMapper titleMapper;
 
     @Override
     public Map<String, Double> getAllTitle() {

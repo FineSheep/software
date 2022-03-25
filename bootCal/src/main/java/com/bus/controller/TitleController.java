@@ -15,7 +15,7 @@ import java.util.List;
 public class TitleController {
 
     @Autowired
-    TitleService tit;
+    private TitleService tit;
 
     @RequestMapping("/getAll")
     public List getAll(){
