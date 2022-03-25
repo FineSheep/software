@@ -3,76 +3,73 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
-		   <link rel="stylesheet" type="text/css" href="css/index.css" />
-		   <link rel="stylesheet" type="text/css" href="css/iconfont.css" />
-		   <script src="bootstrap/jQuery-1.12.4.js"></script>
-		   <script src="javascript/cookieTool.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<link rel="stylesheet" type="text/css" href="css/iconfont.css" />
+		<script src="bootstrap/jQuery-1.12.4.js"></script>
+		<script src="javascript/cookieTool.js"></script>
 	</head>
 	<body>
-		<form  id="myForm">
-		    <div id="login-box">
-		        <h1>Register</h1>
-		        <div class="input-box">
-		            <i class="iconfont">&#xe609;</i>
-		
-		
-		            <input type="text" placeholder="UserName" id="UserName"  name="adminName"/>
-		            <br>
-		            <span id="sp1" ></span>
-		        </div>
-		        <div class="input-box">
-		            <i class="iconfont">&#xe605;</i>
-		            <input type="password" placeholder="UserPassword"id="UserPassword"  name="adminPassword"/>
-		            <br>
-		            <span id="sp2" ></span>
-		        </div>
-		        <div class="input-box">
-		            <i class="iconfont">&#xe605;</i>
-		            <input type="password" placeholder="INPUT AGAIN" id="pass"/>
-		            <br>
-		            <span id="sp3" ></span>
-		        </div>
-		        <button type="button" onclick="judge()">Register</button>
-		    </div>
+		<form id="myForm">
+			<div id="login-box">
+		 	<h1>Register</h1>
+				<div class="input-box">
+					<i class="iconfont">&#xe609;</i>
+
+
+					<input type="text" placeholder="UserName" id="UserName" name="adminName" />
+					<br>
+					<span id="sp1"></span>
+				</div>
+				<div class="input-box">
+					<i class="iconfont">&#xe605;</i>
+					<input type="password" placeholder="UserPassword" id="UserPassword" name="adminPassword" />
+					<br>
+					<span id="sp2"></span>
+				</div>
+				<div class="input-box">
+					<i class="iconfont">&#xe605;</i>
+					<input type="password" placeholder="INPUT AGAIN" id="pass" />
+					<br>
+					<span id="sp3"></span>
+		 	</div>
+				<button type="button" onclick="judge()">Register</button>
+			</div>
 		</form>
 	</body>
 	<script>
-		
-	
 		function register() {
-	
+
 			$.ajax({
 				url: 'http://localhost:8080/admin/register',
 				type: 'get',
 				data: $("#myForm").serialize(),
 				success: function(msg) {
-					alert(msg);
 					if ('ok' == msg) {
 						console.log($("#adminName").val());
 						setCookie("loginName", $("#UserName").val(), 1);
 						location.href = "practice.html";
-	
+
 					} else {
-	
+						alert('用户名重复');
 						location.History();
 					}
 				}
 			})
 		}
-		
-		 function judge(){
-		        var pas1 = $("#UserPassword").val();
-		        var pas2 =$("#pass").val();
-				console.log(pas1);
-				console.log(pas2);
-		        if(pas1==pas2){
-					console.log(11);
-		            $('#sp3').html(`<font ></font>`);
-					register();
-		        }else{
-		
-		             $('#sp3').html(`<font color = "red">两次输入的密码不一致</font>`);
-		        }
-		    }
+
+		function judge() {
+			var pas1 = $("#UserPassword").val();
+			var pas2 = $("#pass").val();
+			console.log(pas1);
+			console.log(pas2);
+			if (pas1 == pas2) {
+				console.log(11);
+				$('#sp3').html(`<font ></font>`);
+				register();
+			} else {
+
+				$('#sp3').html(`<font color = "red">两次输入的密码不一致</font>`);
+			}
+		}
 	</script>
 </html>
